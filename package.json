@@ -1,0 +1,29 @@
+{
+  "name": "gandr-ai-sdk",
+  "version": "0.1.0",
+  "description": "Gandr speech provider for the Vercel AI SDK. First audio byte in 146 ms over the open internet, 116 ms p50 first audio, server side warm. 23 languages, every render watermarked.",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": ["index.js", "index.d.ts", "README.md"],
+  "keywords": ["tts", "text-to-speech", "vercel-ai-sdk", "voice-agents", "gandr"],
+  "license": "MIT",
+  "dependencies": {
+    "gandr": "^0.1.1"
+  },
+  "peerDependencies": {
+    "ai": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "ai": { "optional": true }
+  },
+  "engines": { "node": ">=18" },
+  "repository": "Gandr-AI/gandr-ai-sdk",
+  "homepage": "https://gandr.ai"
+}
