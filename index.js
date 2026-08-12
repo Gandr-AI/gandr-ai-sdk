@@ -19,14 +19,21 @@ class GandrSpeechModel {
     this.client = client;
   }
 
-  async doGenerate({ text, voice, outputFormat, speed, language, headers }) {
+  async doGenerate({ text, voice, outputFormat, instructions, speed, language, headers }) {
     const warnings = [];
     const opts = {};
     if (voice) opts.voice = voice;
-    if (language && language !== "auto") opts.language = language;
+    if (language && language !== "auto") {
+      opts.language = language;
+    } else if (language === "auto") {
+      warnings.push({ type: "unsupported", feature: "language", details: "Gandr requires an explicit ISO 639-1 language; auto is not supported and would render English" });
+    }
+    if (instructions) {
+      warnings.push({ type: "unsupported", feature: "instructions", details: "Gandr has no per-call instructions parameter; style is fixed per voice" });
+    }
     if (speed !== undefined) opts.speed = speed;
     if (outputFormat && outputFormat !== "wav") {
-      warnings.push({ type: "unsupported-setting", setting: "outputFormat", details: `Gandr renders WAV; "${outputFormat}" ignored` });
+      warnings.push({ type: "unsupported", feature: "outputFormat", details: `Gandr renders WAV; "${outputFormat}" ignored` });
     }
     const audio = await this.client.say(text, opts);
     return {

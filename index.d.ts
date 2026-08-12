@@ -1,4 +1,9 @@
-import { Gandr } from "gandr";
+/** gandr-ai-sdk: Gandr speech provider for the Vercel AI SDK. */
+
+/** Gandr ships no type declarations on npm, so the client is a local structural type. */
+export interface GandrClient {
+  say(text: string, options?: Record<string, unknown>): Promise<Uint8Array>;
+}
 
 export interface GandrSpeechCallOptions {
   text: string;
@@ -12,9 +17,16 @@ export interface GandrSpeechCallOptions {
   headers?: Record<string, string | undefined>;
 }
 
+/** Warning shapes accepted by the AI SDK's SharedV4Warning union. */
+export type GandrWarning =
+  | { type: "unsupported"; feature: string; details?: string }
+  | { type: "compatibility"; feature: string; details?: string }
+  | { type: "deprecated"; setting: string; message: string }
+  | { type: "other"; message: string };
+
 export interface GandrSpeechResult {
   audio: Uint8Array;
-  warnings: Array<{ type: string; setting?: string; details?: string }>;
+  warnings: Array<GandrWarning>;
   response: { timestamp: Date; modelId: string };
 }
 
@@ -22,7 +34,7 @@ export declare class GandrSpeechModel {
   readonly specificationVersion: "v4";
   readonly provider: "gandr";
   readonly modelId: string;
-  constructor(modelId: string, client: Gandr);
+  constructor(modelId: string, client: GandrClient);
   doGenerate(options: GandrSpeechCallOptions): Promise<GandrSpeechResult>;
 }
 
@@ -32,4 +44,4 @@ export interface GandrProvider {
   speech(modelId?: string): GandrSpeechModel;
 }
 
-export declare function createGandr(options?: { apiKey?: string; client?: Gandr }): GandrProvider;
+export declare function createGandr(options?: { apiKey?: string; client?: GandrClient }): GandrProvider;
